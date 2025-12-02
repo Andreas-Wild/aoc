@@ -1,3 +1,4 @@
+# https://adventofcode.com/2025/day/9
 import time
 
 with open("test_input.txt", "r") as f:
