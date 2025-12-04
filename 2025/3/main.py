@@ -6,29 +6,32 @@ with open("test_input.txt", "r") as f:
 with open("input.txt", "r") as f:
     input = f.read().splitlines()
 
+
+def find_start(digit_idx_pairs: list[tuple[int, str]], n: int) -> (int, str):
+    for digit_idx_pair in digit_idx_pairs:
+        idx = digit_idx_pair[0]
+        digit = digit_idx_pair[1]
+
+        if idx < n:
+            return idx, digit
+
+
 # Code Start
 answer = 0
-# So we need to check where the greatest two are. Easy step one solution is to sort and use [-2].
-for bank in input:
-    first, second = ("1", "1")
-    index = [-1, -1]
-    for i, digit in enumerate(bank):
-        # If digit is greater than current first place update and we still have digits left
-        if digit > first and i != len(bank) - 1:
-            index[0] = i
-            first = digit
-            # When we jump a ten, set second back to 1
-            second = "1"
-        # Else if digit is greater than the second place update
-        elif digit >= second:
-            index[1] = i
-            second = digit
-    if index[0] > index[1]:
-        best_batteries = second + first
-    else:
-        best_batteries = first + second
-    print(best_batteries)
-    answer += int(best_batteries)
+# We need to sort the banks but remember their original positions
+for bank in test_input:
+    # n is the maximum index our starting point can to have
+    n = len(bank) - 11
+    values = sorted(enumerate(list(bank)), key=lambda x: x[1], reverse=True)
+    # Now we need to select our starting point
+    base = ""
+    for i in range(12):
+        idx, digit = find_start(values, n)
+        base += digit
+        n += 1
+        values.remove((idx, digit))
+    print(base)
+    answer += int(base)
 # Code End
 start_time = time.time()
 
